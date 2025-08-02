@@ -9,29 +9,35 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\User\PengaduanController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-//tentangkami 
-
+// Tentang Kami 
 Route::get('/tentang', [TentangController::class, 'index'])->name('tentang');
 
-//kontak
+// Kontak
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 
 // Untuk User
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+
+    // Pengaduan Routes
+    Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('user.pengaduan.index');
     Route::get('/pengaduan/create', [PengaduanController::class, 'create'])->name('user.pengaduan.create');
     Route::post('/pengaduan', [PengaduanController::class, 'store'])->name('user.pengaduan.store');
-    Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('user.pengaduan.index');
+    
+    // Edit & Hapus Pengaduan
+    Route::get('/pengaduan/{id}/edit', [PengaduanController::class, 'edit'])->name('user.pengaduan.edit');
+    Route::put('/pengaduan/{id}', [PengaduanController::class, 'update'])->name('user.pengaduan.update');
+    Route::delete('/pengaduan/{id}', [PengaduanController::class, 'destroy'])->name('user.pengaduan.destroy');
 });
 
 // Untuk Admin
@@ -48,6 +54,5 @@ Route::middleware('auth')->group(function () {
 
 // Tampilkan semua pengaduan untuk publik/user
 Route::get('/pengaduan/semua', [PengaduanController::class, 'showAll'])->name('user.pengaduan.all');
-
 
 require __DIR__.'/auth.php';
