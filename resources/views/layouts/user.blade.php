@@ -4,9 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Dashboard - LAPMAS Ambon</title>
-  
-  {{-- Vite untuk CSS & JS --}}
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
 
   {{-- Bootstrap CDN --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
@@ -44,12 +41,15 @@
           <li class="nav-item">
             <a class="nav-link text-dark" href="{{ route('user.dashboard') }}">Home</a>
           </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="{{ route('user.pengaduan.all') }}">Daftar Pengaduan</a>
+        </li>
           <li class="nav-item">
-            <a class="nav-link text-dark" href="#">Pengaduan</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark" href="#">Buat Pengaduan</a>
-          </li>
+  <a class="nav-link text-dark" href="{{ route('user.pengaduan.index') }}">Pengaduan Saya</a>
+</li>
+<li class="nav-item">
+  <a class="nav-link text-dark" href="{{ route('user.pengaduan.create') }}">Buat Pengaduan</a>
+</li>
 
           <!-- ✅ Dropdown Profil -->
           <li class="nav-item dropdown">
@@ -81,7 +81,7 @@
         <div class="col-md-6">
           <h1>Layanan Pengaduan Masyarakat Ambon Secara Online</h1>
           <p>Sampaikan laporan masalah anda di sini, kami akan menanganinya dengan cepat.</p>
-          <a href="#" class="btn btn-warning">Buat Pengaduan</a>
+          <a href="{{ route('user.pengaduan.create') }}" class="btn btn-warning">Buat Pengaduan</a>
         </div>
         <div class="col-md-6 d-flex justify-content-center">
   <div class="card shadow-lg border-0" st yle="width: 100%; max-width: 350px; border-radius: 1rem;">

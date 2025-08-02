@@ -7,6 +7,9 @@ use App\Http\Controllers\TentangController;
 use App\Http\Controllers\KontakController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\User\PengaduanController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,6 +29,9 @@ Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 // Untuk User
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('/pengaduan/create', [PengaduanController::class, 'create'])->name('user.pengaduan.create');
+    Route::post('/pengaduan', [PengaduanController::class, 'store'])->name('user.pengaduan.store');
+    Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('user.pengaduan.index');
 });
 
 // Untuk Admin
@@ -39,5 +45,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Tampilkan semua pengaduan untuk publik/user
+Route::get('/pengaduan/semua', [PengaduanController::class, 'showAll'])->name('user.pengaduan.all');
+
 
 require __DIR__.'/auth.php';
