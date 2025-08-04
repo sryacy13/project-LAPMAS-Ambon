@@ -16,4 +16,9 @@ class Pengaduan extends Model
         'lokasi',
         'gambar',
     ];
+
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }

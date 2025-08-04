@@ -5,6 +5,9 @@
     <title>Buat Pengaduan - LAPMAS Ambon</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <style>
         #map { width: 100%; height: 300px; }
     </style>
@@ -23,17 +26,17 @@
 
         <div class="mb-3">
             <label for="judul" class="form-label">Judul Pengaduan</label>
-            <input type="text" name="judul" id="judul" class="form-control" placeholder="Masukkan Judul Pengaduan" required>
+            <input type="text" name="judul" id="judul" class="form-control" required>
         </div>
 
         <div class="mb-3">
             <label for="deskripsi" class="form-label">Deskripsi</label>
-            <textarea name="deskripsi" id="deskripsi" rows="4" class="form-control" placeholder="Tuliskan Deskripsi Lengkap" required></textarea>
+            <textarea name="deskripsi" id="deskripsi" rows="4" class="form-control" required></textarea>
         </div>
 
         <div class="mb-3">
             <label for="lokasi" class="form-label">Lokasi</label>
-            <input type="text" name="lokasi" id="lokasi" class="form-control" placeholder="Contoh: Jl. Diponegoro No. 10" required>
+            <input type="text" name="lokasi" id="lokasi" class="form-control" required>
         </div>
 
         <div class="mb-3">
@@ -50,8 +53,6 @@
     </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
     var map = L.map('map').setView([-3.6547, 128.1900], 13);
 
@@ -61,10 +62,31 @@
 
     var marker = L.marker([-3.6547, 128.1900], { draggable: true }).addTo(map);
 
-    marker.on('dragend', function(e) {
+    // Update input lokasi ketika marker digeser
+    marker.on('dragend', function() {
         var position = marker.getLatLng();
         document.getElementById('lokasi').value = position.lat + ', ' + position.lng;
     });
+
+    // Fitur search lokasi (geocoding)
+    document.getElementById('lokasi').addEventListener('change', function () {
+        var query = this.value;
+        if (query.length > 3) {
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        var lat = parseFloat(data[0].lat);
+                        var lon = parseFloat(data[0].lon);
+                        map.setView([lat, lon], 15);
+                        marker.setLatLng([lat, lon]);
+                    } else {
+                        alert('Lokasi tidak ditemukan');
+                    }
+                });
+        }
+    });
 </script>
+
 </body>
 </html>
