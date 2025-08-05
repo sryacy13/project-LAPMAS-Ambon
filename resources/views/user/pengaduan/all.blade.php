@@ -22,6 +22,9 @@
     </style>
 </head>
 <body class="container my-5">
+    <!-- TOMBOL KEMBALI -->
+    <a href="javascript:history.back()" class="btn btn-secondary mb-3">← Kembali</a>
+
     <h2 class="mb-4 text-danger">Pengaduan</h2>
 
     <!-- SEARCH BAR -->

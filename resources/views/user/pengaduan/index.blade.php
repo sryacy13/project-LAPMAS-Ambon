@@ -14,6 +14,10 @@
     </style>
 </head>
 <body class="container my-5">
+
+    <!-- TOMBOL KEMBALI -->
+    <a href="javascript:history.back()" class="btn btn-secondary mb-3">← Kembali</a>
+
     <h2 class="text-danger mb-4">Daftar Pengaduan Saya</h2>
 
     {{-- Pesan sukses --}}
