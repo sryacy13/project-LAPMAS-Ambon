@@ -35,7 +35,8 @@ class PengaduanController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'lokasi' => 'required|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+
         ]);
 
         $gambarPath = $request->file('gambar') 
