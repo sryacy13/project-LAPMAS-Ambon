@@ -22,13 +22,11 @@ class AdminPengaduanController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
-        // ✅ Validasi agar hanya status yang diizinkan yang bisa dipilih
         $validated = $request->validate([
             'status' => 'required|string|in:Belum diproses,Sedang diproses,Selesai,Pengaduan Dibatalkan',
             'tanggapan' => 'nullable|string|max:500',
         ]);
 
-        // ✅ Update status & tanggapan secara langsung
         Pengaduan::where('id', $id)->update([
             'status' => $validated['status'],
             'tanggapan' => $validated['tanggapan'] ?? '',
@@ -37,5 +35,18 @@ class AdminPengaduanController extends Controller
         return redirect()
             ->route('admin.pengaduan.index')
             ->with('success', 'Status & tanggapan berhasil diperbarui.');
+    }
+
+    /**
+     * Menghapus data pengaduan.
+     */
+    public function destroy($id)
+    {
+        $pengaduan = Pengaduan::findOrFail($id);
+        $pengaduan->delete();
+
+        return redirect()
+            ->route('admin.pengaduan.index')
+            ->with('success', 'Pengaduan berhasil dihapus.');
     }
 }

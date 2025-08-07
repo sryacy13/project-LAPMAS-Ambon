@@ -10,6 +10,7 @@ use App\Http\Controllers\User\PengaduanController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminPengaduanController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\Admin\LaporanPengaduanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,48 +18,53 @@ use App\Http\Controllers\AdminUserController;
 |--------------------------------------------------------------------------
 */
 
+// ====================== HALAMAN UMUM ==========================
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Tentang Kami 
 Route::get('/tentang', [TentangController::class, 'index'])->name('tentang');
-
-// Kontak
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 
 // ====================== USER ==========================
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 
-    // Pengaduan Routes
+    // Pengaduan User
     Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('user.pengaduan.index');
     Route::get('/pengaduan/create', [PengaduanController::class, 'create'])->name('user.pengaduan.create');
     Route::post('/pengaduan', [PengaduanController::class, 'store'])->name('user.pengaduan.store');
-
-    // Edit & Hapus Pengaduan
     Route::get('/pengaduan/{id}/edit', [PengaduanController::class, 'edit'])->name('user.pengaduan.edit');
     Route::put('/pengaduan/{id}', [PengaduanController::class, 'update'])->name('user.pengaduan.update');
     Route::delete('/pengaduan/{id}', [PengaduanController::class, 'destroy'])->name('user.pengaduan.destroy');
+
+    // Pengaduan Publik
+    Route::get('/pengaduan/semua', [PengaduanController::class, 'showAll'])->name('user.pengaduan.all');
 });
 
 // ====================== ADMIN ==========================
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     // Manajemen Users
-    Route::get('/admin/users', [AdminUserController::class, 'index'])->name('admin.users.index');
-    Route::delete('/admin/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 
     // Data Pengaduan
-    Route::get('/admin/pengaduan', [AdminPengaduanController::class, 'index'])->name('admin.pengaduan.index');
-    Route::get('/admin/pengaduan/{id}', [AdminPengaduanController::class, 'show'])->name('admin.pengaduan.show');
-    Route::put('/admin/pengaduan/{id}', [AdminPengaduanController::class, 'updateStatus'])->name('admin.pengaduan.update');
+    Route::get('/pengaduan', [AdminPengaduanController::class, 'index'])->name('pengaduan.index');
+    Route::get('/pengaduan/{id}', [AdminPengaduanController::class, 'show'])->name('pengaduan.show');
+    Route::put('/pengaduan/{id}', [AdminPengaduanController::class, 'updateStatus'])->name('pengaduan.update');
+    Route::delete('/pengaduan/{id}', [AdminPengaduanController::class, 'destroy'])->name('pengaduan.destroy');
 
-    // Route placeholder laporan (jika nanti dibuat)
-    Route::get('/admin/laporan', function () {
+    // Laporan Pengaduan
+    Route::get('/laporan-pengaduan', [LaporanPengaduanController::class, 'index'])->name('laporan.pengaduan');
+    Route::get('/laporan-pengaduan/export/pdf', [LaporanPengaduanController::class, 'exportPdf'])->name('laporan.pengaduan.pdf');
+    Route::get('/laporan-pengaduan/export/excel', [LaporanPengaduanController::class, 'exportExcel'])->name('laporan.pengaduan.excel');
+
+    // Placeholder laporan (opsional)
+    Route::get('/laporan', function () {
         return view('admin.laporan.index');
-    })->name('admin.laporan.index');
+    })->name('laporan.index');
 });
 
 // ====================== PROFIL ==========================
@@ -69,14 +75,10 @@ Route::middleware('auth')->group(function () {
 });
 
 // ====================== LOGOUT ==========================
-// Jika tidak pakai Laravel Breeze/Fortify, tambahkan ini
 Route::post('/logout', function () {
     Auth::logout();
     return redirect('/login');
 })->name('logout');
 
-// ====================== PENGADUAN PUBLIK ==========================
-Route::get('/pengaduan/semua', [PengaduanController::class, 'showAll'])->name('user.pengaduan.all');
-
-// Auth scaffolding (login, register, dsb.)
+// ====================== AUTH SCAFFOLDING ==========================
 require __DIR__.'/auth.php';

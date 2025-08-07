@@ -8,14 +8,7 @@
   {{-- Bootstrap CDN --}}
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
-  {{-- Leaflet CSS --}}
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
   <style>
-    #map {
-      width: 100%;
-      height: 500px;
-    }
     .profile-icon {
       width: 35px;
       height: 35px;
@@ -41,15 +34,15 @@
           <li class="nav-item">
             <a class="nav-link text-dark" href="{{ route('user.dashboard') }}">Home</a>
           </li>
-        <li class="nav-item">
-          <a class="nav-link text-dark" href="{{ route('user.pengaduan.all') }}">Daftar Pengaduan</a>
-        </li>
           <li class="nav-item">
-  <a class="nav-link text-dark" href="{{ route('user.pengaduan.index') }}">Pengaduan Saya</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link text-dark" href="{{ route('user.pengaduan.create') }}">Buat Pengaduan</a>
-</li>
+            <a class="nav-link text-dark" href="{{ route('user.pengaduan.all') }}">Daftar Pengaduan</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" href="{{ route('user.pengaduan.index') }}">Pengaduan Saya</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-dark" href="{{ route('user.pengaduan.create') }}">Buat Pengaduan</a>
+          </li>
 
           <!-- ✅ Dropdown Profil -->
           <li class="nav-item dropdown">
@@ -84,57 +77,67 @@
           <a href="{{ route('user.pengaduan.create') }}" class="btn btn-warning">Buat Pengaduan</a>
         </div>
         <div class="col-md-6 d-flex justify-content-center">
-  <div class="card shadow-lg border-0" st yle="width: 100%; max-width: 350px; border-radius: 1rem;">
-    <div class="card-body text-center">
-      <img src="{{ asset('img/gambar2.png') }}" alt="Ilustrasi Pengaduan" class="img-fluid rounded" style="max-height: 250px; object-fit: cover;">
-    </div>
-  </div>
-</div>
-
+          <div class="card shadow-lg border-0" style="width: 100%; max-width: 350px; border-radius: 1rem;">
+            <div class="card-body text-center">
+              <img src="{{ asset('img/gambar2.png') }}" alt="Ilustrasi Pengaduan" class="img-fluid rounded" style="max-height: 250px; object-fit: cover;">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ✅ PETA PENGADUAN -->
-  <section class="py-5">
+  <!-- ✅ GALERI PENGADUAN -->
+  <section class="py-5 bg-light">
     <div class="container">
-      <h2 class="text-danger mb-4">Peta Pengaduan</h2>
-      <div id="map"></div>
+      <h2 class="text-danger mb-4">Galeri Pengaduan</h2>
+      <div class="row g-4">
+
+        <!-- Pengaduan 1 -->
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+            <img src="{{ asset('img/image4.png') }}" class="card-img-top" alt="Sampah di jalan">
+            <div class="card-body">
+              <h5 class="card-title">Sampah Menumpuk di Jalan Raya</h5>
+              <p class="card-text text-muted small">Kelurahan Batu Merah</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pengaduan 2 -->
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+           <img src="{{ asset('img/image5.png') }}" class="card-img-top" alt="Jalan rusak">
+
+            <div class="card-body">
+              <h5 class="card-title">Jalan Berlubang dan Berbahaya</h5>
+              <p class="card-text text-muted small">Kecamatan Sirimau</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pengaduan 3 -->
+        <div class="col-md-4">
+          <div class="card border-0 shadow-sm h-100">
+            <img src="{{ asset('img/image.png') }}" class="card-img-top" alt="Lampu mati">
+            <div class="card-body">
+              <h5 class="card-title">Lampu Jalan Tidak Menyala</h5>
+              <p class="card-text text-muted small">Jln. Pattimura</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tombol lihat semua -->
+      <div class="text-center mt-4">
+        <a href="{{ route('user.pengaduan.all') }}" class="btn btn-outline-danger">Lihat Semua Pengaduan</a>
+      </div>
     </div>
   </section>
 
   <!-- ✅ SCRIPTS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
-  // Koordinat lokasi pengaduan
-  const latitude = -3.6547;
-  const longitude = 128.1900;
-
-  // Inisialisasi Peta
-  var map = L.map('map').setView([latitude, longitude], 13);
-
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap'
-  }).addTo(map);
-
-  // Marker dengan popup yang diperindah
-  L.marker([latitude, longitude]).addTo(map)
-    .bindPopup(`
-      <div style="font-family: Arial, sans-serif;">
-      <strong>Sampah Menumpuk di Pinggir Jalan</strong><br/>
-      Terdapat tumpukan sampah yang belum diangkut di area ini. Mohon segera dilakukan penanganan untuk menjaga kebersihan lingkungan.<br/>
-      <a href="https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}" 
-         target="_blank" 
-         style="display: inline-block; margin-top: 6px; padding: 4px 12px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 5px;">
-         Rute
-      </a>
-    </div>
-     
-    `)
-    .openPopup();
-</script>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
