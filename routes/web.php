@@ -17,6 +17,7 @@ use App\Http\Controllers\AdminUserController;
 |--------------------------------------------------------------------------
 */
 
+// Halaman Awal
 Route::get('/', function () {
     return view('welcome');
 });
@@ -27,22 +28,31 @@ Route::get('/tentang', [TentangController::class, 'index'])->name('tentang');
 // Kontak
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 
-// ====================== USER ==========================
+/*
+|--------------------------------------------------------------------------
+| USER ROUTES
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 
-    // Pengaduan Routes
+    // Pengaduan
     Route::get('/pengaduan', [PengaduanController::class, 'index'])->name('user.pengaduan.index');
     Route::get('/pengaduan/create', [PengaduanController::class, 'create'])->name('user.pengaduan.create');
     Route::post('/pengaduan', [PengaduanController::class, 'store'])->name('user.pengaduan.store');
-
-    // Edit & Hapus Pengaduan
     Route::get('/pengaduan/{id}/edit', [PengaduanController::class, 'edit'])->name('user.pengaduan.edit');
     Route::put('/pengaduan/{id}', [PengaduanController::class, 'update'])->name('user.pengaduan.update');
     Route::delete('/pengaduan/{id}', [PengaduanController::class, 'destroy'])->name('user.pengaduan.destroy');
+
+    // Pengaduan Publik
+    Route::get('/pengaduan/semua', [PengaduanController::class, 'showAll'])->name('user.pengaduan.all');
 });
 
-// ====================== ADMIN ==========================
+/*
+|--------------------------------------------------------------------------
+| ADMIN ROUTES
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
@@ -55,28 +65,33 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/pengaduan/{id}', [AdminPengaduanController::class, 'show'])->name('admin.pengaduan.show');
     Route::put('/admin/pengaduan/{id}', [AdminPengaduanController::class, 'updateStatus'])->name('admin.pengaduan.update');
 
-    // Route placeholder laporan (jika nanti dibuat)
+    // Laporan
     Route::get('/admin/laporan', function () {
         return view('admin.laporan.index');
     })->name('admin.laporan.index');
 });
 
-// ====================== PROFIL ==========================
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+/*
+|--------------------------------------------------------------------------
+| PROFILE ROUTES (USER & ADMIN)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// ====================== LOGOUT ==========================
-// Jika tidak pakai Laravel Breeze/Fortify, tambahkan ini
+/*
+|--------------------------------------------------------------------------
+| LOGOUT (Jika Tidak Menggunakan Breeze/Fortify)
+|--------------------------------------------------------------------------
+*/
 Route::post('/logout', function () {
     Auth::logout();
     return redirect('/login');
 })->name('logout');
 
-// ====================== PENGADUAN PUBLIK ==========================
-Route::get('/pengaduan/semua', [PengaduanController::class, 'showAll'])->name('user.pengaduan.all');
-
 // Auth scaffolding (login, register, dsb.)
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
