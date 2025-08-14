@@ -16,9 +16,10 @@
     <span class="menu-title">User</span>
   </a>
 </li>
+
 <li class="nav-item">
-  <a class="nav-link" href="#">
-     <i class="mdi mdi-file-chart menu-icon"></i>
+  <a class="nav-link" href="{{ route('admin.laporan.pengaduan') }}">
+    <i class="mdi mdi-file-chart menu-icon"></i>
     <span class="menu-title">Laporan Pengaduan</span>
   </a>
 </li>
